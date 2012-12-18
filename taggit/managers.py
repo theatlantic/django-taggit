@@ -10,20 +10,10 @@ from taggit.forms import TagField
 from taggit.models import TaggedItem, GenericTaggedItemBase
 from taggit.utils import require_instance_manager
 
-
 try:
-    all
-except NameError:
-    # 2.4 compat
-    try:
-        from django.utils.itercompat import all
-    except ImportError:
-        # 1.1.X compat
-        def all(iterable):
-            for item in iterable:
-                if not item:
-                    return False
-            return True
+    from caching.base import CacheManager as Manager
+except ImportError:
+    from django.db.models import Manager
 
 
 class TaggableRel(ManyToManyRel):
@@ -33,7 +23,6 @@ class TaggableRel(ManyToManyRel):
         self.symmetrical = True
         self.multiple = True
         self.through = None
-
 
 class TaggableManager(RelatedField):
     def __init__(self, verbose_name=_("Tags"),
@@ -140,7 +129,7 @@ class TaggableManager(RelatedField):
         return []
 
 
-class _TaggableManager(models.Manager):
+class _TaggableManager(Manager):
     def __init__(self, through, model, instance):
         self.through = through
         self.model = model

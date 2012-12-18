@@ -6,8 +6,15 @@ from django.template.defaultfilters import slugify as default_slugify
 from django.utils.translation import ugettext_lazy as _, ugettext
 from django.core.urlresolvers import reverse
 
+try:
+    from caching.base import CachingMixin
+    from caching.base import CachingManager as Manager
+except ImportError:
+    class CachingMixin(object):
+        pass
+    Manager = models.Manager
 
-class TagBase(models.Model):
+class TagBase(CachingMixin, models.Model):
     name = models.CharField(verbose_name=_('Name'), max_length=100)
     slug = models.SlugField(verbose_name=_('Slug'), unique=True, max_length=100)
 
@@ -16,6 +23,8 @@ class TagBase(models.Model):
 
     class Meta:
         abstract = True
+
+    objects = Manager()
 
     def save(self, *args, **kwargs):
         if not self.pk and not self.slug:
@@ -62,7 +71,7 @@ class Tag(TagBase):
 
 
 
-class ItemBase(models.Model):
+class ItemBase(CachingMixin, models.Model):
     def __unicode__(self):
         return ugettext("%(object)s tagged with %(tag)s") % {
             "object": self.content_object,
@@ -71,6 +80,8 @@ class ItemBase(models.Model):
 
     class Meta:
         abstract = True
+
+    objects = Manager()
 
     @classmethod
     def tag_model(cls):
