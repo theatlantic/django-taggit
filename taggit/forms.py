@@ -8,15 +8,6 @@ from taggit.utils import parse_tags, edit_string_for_tags, clean_tag_string, tra
 
 class TagWidget(forms.TextInput):
     
-    tag_suggest = None
-    def __init__(self, generate_tags=None):
-        super(TagWidget, self).__init__()
-        self.generate_tags = generate_tags
-        if generate_tags is not None:
-            from taggit.settings import TAGGIT_TAG_GENERATE_FUNC
-            if TAGGIT_TAG_GENERATE_FUNC is None:
-                raise LookupError('TAGGIT_TAG_GENERATE_FUNC is not defined!')
-
     def get_media(self):
         """
         A method used to dynamically generate the media property,
@@ -66,19 +57,12 @@ class TagWidget(forms.TextInput):
         attrs.update({'class': 'taggit-tags'})
         rendered = self.default_render(name, value, attrs)
 
-        if self.generate_tags is not None:
-            attrs.update({'data-tag-content-field': self.generate_tags});
 
         # We need to get rid of the id if it's in attrs
         if 'id' in attrs:
-            attrs['data-field-id' ] = attrs.pop('id')
+            attrs['data-field-id'] = attrs.pop('id')
 
         tag_list = self.render_values(value or [], attrs)
-        if self.generate_tags is not None:
-            attrs = flatatt({'data-field': name,
-                             'class':'taggit-tag-suggest',
-                             'type': 'button'})
-            tag_list += u"<button%s>Generate</button>" % attrs
 
         return mark_safe(rendered + tag_list)
 
@@ -112,10 +96,11 @@ class TagField(forms.CharField):
     widget = TagWidget
 
     def __init__(self, *args, **kwargs):
-        self.transform_on_save  = kwargs.pop('transform_on_save', False)
+        self.transform_on_save  = kwargs.pop('transform_on_save', True)
         super(TagField, self).__init__(*args, **kwargs)
 
     def clean(self, value):
+        # import debug
         value = super(TagField, self).clean(value)
         try:
             tags = parse_tags(value)
