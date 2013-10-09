@@ -205,6 +205,13 @@ class _TaggableManager(models.Manager):
         ).order_by('-num_times')
 
     @require_instance_manager
+    def with_aliases(self, slugify=False):
+        tags = self.filter(ad_alias__gt="")
+        if slugify:
+            tags = tags.values_list('slug', flat=True)
+        return tags
+
+    @require_instance_manager
     def similar_objects(self, num=None, **filters):
         lookup_kwargs = self._lookup_kwargs()
         lookup_keys = sorted(lookup_kwargs)

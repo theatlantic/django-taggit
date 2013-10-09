@@ -14,7 +14,9 @@ class TagAdmin(admin.ModelAdmin):
     ]
     ordering = ['name']
     search_fields = ['name']
-
+    list_display = ['name', 'ad_alias']
+    list_filter = ['ad_alias',]
+    list_editable = ['ad_alias',]
 
 
 class TagTransformAdminForm(forms.ModelForm):
