@@ -8,31 +8,6 @@ from taggit.utils import parse_tags, edit_string_for_tags, clean_tag_string, tra
 
 class TagWidget(forms.TextInput):
     
-    def get_media(self):
-        """
-        A method used to dynamically generate the media property,
-        since we may not have the urls ready at the time of import,
-        and then the reverse() call would fail.
-        """
-        from django.forms.widgets import Media as _Media
-        from django.core.urlresolvers import NoReverseMatch, reverse
-        media = super(TagWidget, self).media
-        try:
-            media_url = reverse('taggit-static', kwargs={'path': ''})
-        except NoReverseMatch:
-            # Nothing to add
-            pass
-        else:
-            media.add_js([os.path.join(media_url, 'js', 'tagit.js'),
-                          os.path.join(media_url, 'js', 'taggit.js')
-            ])
-            media.add_css({'all': (
-                os.path.join(media_url, 'css', 'tagit-dark-grey.css'),
-            )})
-        return media
-    
-    media = property(get_media)
-    
     def render_values(self, tags, attrs):
         builder = []
         builder.append(u'<ul%s>' % flatatt(attrs))
@@ -90,6 +65,14 @@ class TagWidget(forms.TextInput):
                 initial = ""
         data = clean_tag_string(data)
         return super(TagWidget, self)._has_changed(initial, data)
+
+    class Media:
+        css = {'all': ('taggit/css/tagit-dark-grey.css',)}
+        js = (
+            'taggit/js/tagit.js',
+            'taggit/js/taggit.js',
+            )
+
 
 
 class TagField(forms.CharField):

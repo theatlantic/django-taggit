@@ -28,10 +28,6 @@ def tagged_object_list(request, slug, queryset, **kwargs):
     kwargs["extra_context"]["tag"] = tag
     return object_list(request, qs, **kwargs)
 
-def media(request, path):
-    from django.views.static import serve
-    from taggit.settings import TAGGIT_MEDIA_DIR
-    return serve(request, path, TAGGIT_MEDIA_DIR)
 
 @csrf_exempt
 @require_POST
