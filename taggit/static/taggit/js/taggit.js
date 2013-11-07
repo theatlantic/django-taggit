@@ -1,25 +1,19 @@
 (function($) {
     
-    var taggitPrefix = '/';
-    
-    var scripts = document.getElementsByTagName('SCRIPT');
-    for (var i = 0,l=scripts.length; i < l; i++) {
-        var src = scripts[i].getAttribute('src');
-        if (typeof src == 'string' && src.length) {
-            var matches = src.match(/^(.+\/)static\/js\/taggit\.js/);
-            if (matches) {
-                taggitPrefix = matches[1];
-            }
-        }
-    }
+    var taggitPrefix;
     
     var availableTags = [];
     function setup_autocomplete() {
-        $.getJSON(taggitPrefix + 'ajax', {}, function(data) {
+        
+        // We'll provide this as a data-attr using reverse
+        taggitPrefix = $('input.taggit-tags').attr('data-ajax-url') || '/';
+
+        console.log("setup setup_autocomplete")
+        $.getJSON(taggitPrefix, {}, function(data) {
             availableTags.push.apply(availableTags, data.map(function(i) {
                 return i.fields.name;
             }));
-            $('ul.taggit-tags').tagit('updateAutoCompleteTags', availableTags);
+            $('.taggit-tags').tagit('updateAutoCompleteTags', availableTags);
         });
     }
 
@@ -73,7 +67,7 @@
                 return get_contents_by_name(self, cf); 
             }).join('.\n');
             // Wrap the whole thing in a div to ensure no free-floating text.
-            var raw_contents = ['<div>', raw_contents, '</div>'].join('');
+            raw_contents = ['<div>', raw_contents, '</div>'].join('');
             
             $.ajax({
                 url: query_url,
@@ -100,7 +94,7 @@
     $(document).ready(function() {
         setup_autocomplete();
         setup_tagit_widgets();
-        setup_generate_tags();
+        // setup_generate_tags();
     });
 
 })((typeof window.django != 'undefined') ? django.jQuery : jQuery);

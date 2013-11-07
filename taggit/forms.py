@@ -3,6 +3,7 @@ from django import forms
 from django.forms.util import flatatt
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
+from django.core.urlresolvers import reverse
 
 from taggit.utils import parse_tags, edit_string_for_tags, clean_tag_string, transform_tags
 
@@ -29,7 +30,10 @@ class TagWidget(forms.TextInput):
             attrs = {}
 
         # Get the original input field, which we will hide on render
-        attrs.update({'class': 'taggit-tags'})
+        attrs.update({
+            'class': 'taggit-tags',
+            'data-ajax-url': reverse('taggit-ajax'),
+            })
         rendered = self.default_render(name, value, attrs)
 
 
