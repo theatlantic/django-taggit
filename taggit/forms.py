@@ -74,7 +74,7 @@ class TagWidget(forms.TextInput):
         css = {'all': ('taggit/css/tagit-dark-grey.css',)}
         js = (
             'taggit/js/tagit.js',
-            'taggit/js/taggit.js',
+            'taggit/js/taggit.js?v=1',
             )
 
 

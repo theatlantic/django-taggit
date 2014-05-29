@@ -4,16 +4,14 @@
     
     var availableTags = [];
     function setup_autocomplete() {
-        
         // We'll provide this as a data-attr using reverse
         taggitPrefix = $('input.taggit-tags').attr('data-ajax-url') || '/';
-
-        console.log("setup setup_autocomplete")
-        $.getJSON(taggitPrefix, {}, function(data) {
-            availableTags.push.apply(availableTags, data.map(function(i) {
-                return i.fields.name;
-            }));
-            $('.taggit-tags').tagit('updateAutoCompleteTags', availableTags);
+        // Load available tags only on focus
+        $('ul.taggit-tags').data('tagit').input.one('focus', function() {
+            $.getJSON(taggitPrefix, {}, function(data) {
+                availableTags = data;
+                $('ul.taggit-tags').tagit('updateAutoCompleteTags', availableTags);
+            });
         });
     }
 
@@ -92,8 +90,8 @@
     }
 
     $(document).ready(function() {
-        setup_autocomplete();
         setup_tagit_widgets();
+        setup_autocomplete();
         // setup_generate_tags();
     });
 

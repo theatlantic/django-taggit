@@ -57,6 +57,7 @@ class Tag(TagBase):
     class Meta:
         verbose_name = _("Tag")
         verbose_name_plural = _("Tags")
+        ordering = ('slug',)
 
     def get_absolute_url(self):
         return reverse('taggit_tag', kwargs={'tag_slug':self.slug})
