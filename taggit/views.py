@@ -3,7 +3,7 @@ import json
 from django.views.decorators.http import require_POST
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import get_object_or_404
-from django.views.generic.list_detail import object_list
+from django.views.generic.list import ListView
 from django.utils import simplejson
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -27,7 +27,7 @@ def tagged_object_list(request, slug, queryset, **kwargs):
     if "extra_context" not in kwargs:
         kwargs["extra_context"] = {}
     kwargs["extra_context"]["tag"] = tag
-    return object_list(request, qs, **kwargs)
+    return ListView.as_view(request, qs, **kwargs)
 
 
 @csrf_exempt
