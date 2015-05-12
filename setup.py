@@ -16,11 +16,7 @@ setup(
     url='http://github.com/alex/django-taggit/tree/master',
     packages=find_packages(),
     zip_safe=False,
-    package_data = {
-        'taggit': [
-            'locale/*/LC_MESSAGES/*',
-        ],
-    },
+    include_package_data=True,
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Web Environment',

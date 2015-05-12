@@ -4,3 +4,4 @@ dist/
 _build/
 MyProject.kpf
 .tox/
+build/

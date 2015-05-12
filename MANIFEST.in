@@ -1,2 +1,6 @@
+include AUTHORS.txt
+include LICENSE.txt
+include README.txt
 recursive-include docs *.txt
 recursive-include taggit/locale *
+recursive-include taggit/static *
