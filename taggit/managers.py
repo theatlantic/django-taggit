@@ -51,10 +51,16 @@ class TaggableManager(RelatedField):
             self.help_text = help_text
         self.blank = blank
         self.editable = True
-        self.unique = False
+        try:
+            self.unique = False
+        except AttributeError:
+            pass
         self.creates_table = False
         self.db_column = None
-        self.choices = None
+        try:
+            self.choices = None
+        except AttributeError:
+            pass
         self.serialize = False
         self.null = True
         self.creation_counter = models.Field.creation_counter
